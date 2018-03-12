@@ -3,6 +3,7 @@ import scala.util.matching.Regex
 import java.io._
 import java.util.zip._
 import scala.collection.mutable.ListBuffer
+import scala.math.Ordering
 
 class calFaN50(fa:String) {
 
@@ -34,14 +35,14 @@ class calFaN50(fa:String) {
                 case 1 => gzipSourceStream(fa)
                 case 0 => plainSourceStream(fa)
             }
-        var totalLength:Int=0
-        var totalNumber:Int=0
-        var partLength:Int=0
-        val lengthList=new ListBuffer[Int]
+        var totalLength:Long=0
+        var totalNumber:Long=0
+        var partLength:Long=0
+        val lengthList=new ListBuffer[Long]
         for(line <- inputSource.getLines()){
             val lineElem = line.toList
             lineElem match {
-                case ">"::list => {
+                case '>'::list => {
                                     totalNumber+=1
                                     lengthList+=partLength
                                     partLength=0
@@ -54,7 +55,7 @@ class calFaN50(fa:String) {
             }
         }
         lengthList+=partLength
-        val lengthListSort=lengthList.sorted(>).toList
+        val lengthListSort=lengthList.sortWith(_>_).toList
         
         /* 
         val lengthListSort=lengthList.sorted.toList
@@ -62,17 +63,24 @@ class calFaN50(fa:String) {
         lengthList.sortBy f         def f[T](a:T,b:T):Boolean= a > b      sortBy(>)
         */
         val mapResult=collection.mutable.Map[String,Int]()
-        var cutOff=10
-        var partNumber=0
+        var cutOff:Int=10
+        var partNumber:Long=0
+        var partTotal:Long=0
+        println("total length "+totalLength)
+        println("max length "+lengthListSort.head)
         for(len <- lengthListSort){
-            len*100/totalLength match {
-                case _ < cutOff =>  partNumber+=1
-                case _          =>  {
-                                        println("N"+cutOff+"\t"+len+"\t"+partNumber)
-                                        cutOff+=10
-                                    }
+            partTotal+=len
+            partNumber+=1
+            val dv=partTotal*100/totalLength
+            /*println("test "+len+"\t"+partTotal+"\t"+totalLength)*/
+            if(dv<cutOff)
+                1
+            else{
+                if(cutOff<100) println("N"+cutOff+"\t"+len+"\t"+partNumber+"\t"+partTotal)
+                cutOff+=10
             }
         }
+        inputSource.close()
     }
 }
 
