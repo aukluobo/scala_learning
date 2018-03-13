@@ -30,10 +30,10 @@ class calFaN50(fa:String) {
     bufferSource.close()
     plainSource.close()
     */
-    def calculateN={
-        val inputSource=fileType(fa) match {
-                case 1 => gzipSourceStream(fa)
-                case 0 => plainSourceStream(fa)
+    def calculateN(inputFa:String=fa):Unit={
+        val inputSource=fileType(inputFa) match {
+                case 1 => gzipSourceStream(inputFa)
+                case 0 => plainSourceStream(inputFa)
             }
         var totalLength:Long=0
         var totalNumber:Long=0
@@ -90,7 +90,7 @@ object calFaN50{
         for(i <- args){
             val newCal=new calFaN50(i)
             println(newCal.faName)
-            newCal.calculateN
+            newCal.calculateN()
         }
     }
 }
