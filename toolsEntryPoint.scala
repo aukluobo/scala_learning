@@ -1,6 +1,4 @@
 import genomeTools._
-import scala.Array
-
 
 object toolsEntryPoint{
     def main(args:Array[String])={
